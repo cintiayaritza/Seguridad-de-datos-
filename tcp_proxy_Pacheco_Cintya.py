@@ -19,10 +19,10 @@ def server_loop(local_host, local_port, remote_host, remote_port, receive_first)
     while True:
         client_socket, addr = server.accept()
 
-        # print out the local connection information
+        # imprimir la información de conexión local
         print("[==>] Received incoming connection from {}:{}".format(addr[0], addr[1]))
 
-        # start a thread to talk to the remote host
+        # iniciar un hilo para hablar con el host remoto
         proxy_thread = threading.Thread(target=proxy_handler, args=(client_socket, remote_host, remote_port, receive_first))
         proxy_thread.start()
 
@@ -33,16 +33,16 @@ def main():
         print("Example: ./tcpproxy.py 127.0.0.1 9000 10.12.132.1 9000 True")
         sys.exit(0)
 
-    # setup local listening parameters
+    # configurar parámetros  locales
     local_host = sys.argv[1]
     local_port = int(sys.argv[2])
 
-    # setup remote target
+    # configurar objetivo remoto
     remote_host = sys.argv[3]
     remote_port = int(sys.argv[4])
 
-    # this tells our proxy to connect and receive data
-    # before sending to the remote host
+    #  El proxy que se conecte y reciba datos
+    # Antes de mandar a host remoto 
     receive_first = sys.argv[5]
 
     if "True" in receive_first:
@@ -50,31 +50,31 @@ def main():
     else:
         receive_first = False
 
-    # now spin up our listening socket
+    # ahora activa el socket 
     server_loop(local_host, local_port, remote_host, remote_port, receive_first)
 
 def proxy_handler(client_socket, remote_host, remote_port, receive_first):
-    # connect to the remote host
+    # conectarse al host remoto
     remote_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    # receive data from the remote end if necessary
+    # recibir datos desde el extremo remoto si es necesario
     if receive_first:
         remote_buffer = receive_from(remote_socket)
         hexdump(remote_buffer)
 
-        # send it to our response handler
+        # enviarlo a nuestro controlador de respuestas
         remote_buffer = response_handler(remote_buffer)
 
-        # if we have data to send to our local client, send it
+        # si tenemos datos para enviar a nuestro cliente local, envíelos
         if len(remote_buffer):
             print("[<==] Sending {} bytes to localhost.".format(len(remote_buffer)))
             client_socket.send(remote_buffer.encode())
 
-    # now let's loop and read from local,
-    # send to remote, send to local
+    # ahora hagamos un bucle y leamos desde local
+    # enviar a remoto, enviar a local
     # rinse, wash, repeat
     while True:
-        # read from local host
+        #leer desde el host local
         local_buffer = receive_from(client_socket)
 
         if len(local_buffer):
@@ -84,34 +84,32 @@ def proxy_handler(client_socket, remote_host, remote_port, receive_first):
             # send it to our request handler
             local_buffer = request_handler(local_buffer)
 
-            # send off the data to the remote host
+            # enviar los datos al host remoto
             remote_socket.send(local_buffer.encode())
             print("[==>] Sent to remote.")
 
-            # receive back the response
+            # recibir de vuelta la respuesta
             remote_buffer = receive_from(remote_socket)
 
             if len(remote_buffer):
                 print("[<==] Received {} bytes from remote.".format(len(remote_buffer)))
                 hexdump(remote_buffer)
 
-                # send to our response handler
+                # enviar a nuestro controlador de respuesta
                 remote_buffer = response_handler(remote_buffer)
 
-                # send the response to the local socket
+                # enviar la respuesta al socket local
                 client_socket.send(remote_buffer.encode())
                 print("[<==] Sent to localhost.")
 
-            # if no more data on either side, close the connections
+            # Si no hay más datos en ninguno de los lados, cierre las conexiones.
             if not len(local_buffer) or not len(remote_buffer):
                 client_socket.close()
                 remote_socket.close()
                 print("[*] No more data. Closing connections.")
                 break
 
-# this is a pretty hex dumping function directly taken from
-# the comments here:
-# http://code.activestate.com/recipes/142812-hex-dumper/
+# esta es una función de volcado bastante hexadecimal tomada directamente 
 def hexdump(src, length=16):
     result = []
     digits = 4 if isinstance(src, str) else 2
@@ -130,8 +128,7 @@ def receive_from(connection):
     connection.settimeout(2)
 
     try:
-        # keep reading into the buffer until
-        # there's no more data or we time out
+
         while True:
             data = connection.recv(4096)
             if not data:
@@ -142,12 +139,12 @@ def receive_from(connection):
 
     return buffer
 
-# modify any requests destined for the remote host
+#modificar cualquier solicitud destinada al host remoto
 def request_handler(buffer):
     # perform packet modifications
     return buffer
 
-# modify any response destined for the local host
+# modificar cualquier respuesta destinada al host local
 def response_handler(buffer):
     # perform packet modifications
     return buffer
