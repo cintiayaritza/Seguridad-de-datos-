@@ -18,6 +18,42 @@ La seguridad de datos se refiere a las prácticas y medidas implementadas para p
 
 3. **Intrusos:**
    - Personas no autorizadas que intentan acceder a sistemas o datos de manera no permitida.
+# Triángulos y Conceptos Clave en Seguridad de la Información
+
+## CIA Triad
+
+### Confidencialidad
+Preservar la privacidad de la información, asegurando que solo las partes autorizadas tengan acceso.
+
+### Integridad
+Garantizar que la información no sea modificada de manera no autorizada y que permanezca precisa y completa.
+
+### Disponibilidad
+Asegurar que la información esté disponible cuando sea necesaria, evitando interrupciones no planificadas.
+
+## Triángulo de Usabilidad
+
+### Usabilidad
+Encontrar el equilibrio entre la seguridad y la facilidad de uso, permitiendo una experiencia eficiente para los usuarios.
+
+## Otros Conceptos Clave
+
+### Riesgo
+La probabilidad de que una amenaza explote una vulnerabilidad, resultando en un impacto no deseado.
+
+### MFA (Autenticación Multifactor)
+Utilizar múltiples métodos de autenticación para verificar la identidad del usuario, aumentando la seguridad.
+
+### Vulnerabilidad
+Una debilidad en el sistema que podría ser explotada por una amenaza para comprometer la seguridad.
+
+### Amenaza
+Cualquier evento o circunstancia que pueda comprometer la confidencialidad, integridad o disponibilidad de la información.
+
+### Impacto
+La consecuencia resultante de una amenaza que explota una vulnerabilidad, afectando la seguridad de la información.
+
+
 
 ## Principios fundamentales de seguridad de datos
 
